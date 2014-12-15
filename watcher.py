@@ -22,29 +22,19 @@ MONITOR_FOLDERS = ['/home/abid/Documents/workspace/.misc',
 
 
 class MyEventHandler(pyinotify.ProcessEvent):
-    def process_IN_ACCESS(self, event):
-        print "ACCESS event:", event.pathname
-
-    def process_IN_ATTRIB(self, event):
-        print "ATTRIB event:", event.pathname
 
     def process_IN_CLOSE_NOWRITE(self, event):
-        print "CLOSE_NOWRITE event:", event.pathname
+
+        self.on_close("CLOSE_NOWRITE", event.pathname)
 
     def process_IN_CLOSE_WRITE(self, event):
-        print "CLOSE_WRITE event:", event.pathname
 
-    def process_IN_CREATE(self, event):
-        print "CREATE event:", event.pathname
+        self.on_close("CLOSE_WRITE", event.pathname)
 
-    def process_IN_DELETE(self, event):
-        print "DELETE event:", event.pathname
+    def on_close(self, flag, pathname):
 
-    def process_IN_MODIFY(self, event):
-        print "MODIFY event:", event.pathname
+        print "{}  - {}".format(flag, pathname)
 
-    def process_IN_OPEN(self, event):
-        print "OPEN event:", event.pathname
 
 def main():
     # watch manager
@@ -60,6 +50,7 @@ def main():
     # notifier
     notifier = pyinotify.Notifier(wm, eh)
     notifier.loop()
+
 
 if __name__ == '__main__':
     main()
