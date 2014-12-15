@@ -81,7 +81,7 @@ def main():
     Source: http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
     """
 
-    daemon = WatcherDaemon(PID_FILE)        # The pid file must be specified so that a running daemon can be accessed
+    daemon = WatcherDaemon(PID_FILE, start_msg="Watcher started", stop_msg="Watcher stopped")        # The pid file must be specified so that a running daemon can be accessed
 
     if len(sys.argv) == 2:
 

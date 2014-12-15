@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
 # Source: http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
+#
+# Modified slightly to add log messages
 
 import sys, os, time, atexit
+import syslog
 from signal import SIGTERM
 
 class Daemon:
@@ -11,11 +14,14 @@ class Daemon:
 
         Usage: subclass the Daemon class and override the run() method
         """
-        def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
+        def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null', start_msg="Starting Daemon", stop_msg="Stopping_Daemon"):
                 self.stdin = stdin
                 self.stdout = stdout
                 self.stderr = stderr
                 self.pidfile = pidfile
+                self.start_msg = start_msg
+                self.stop_msg = stop_msg
+
 
         def daemonize(self):
                 """
@@ -83,6 +89,7 @@ class Daemon:
                         sys.exit(1)
 
                 # Start the daemon
+                syslog.syslog(self.start_msg)
                 self.daemonize()
                 self.run()
 
@@ -107,6 +114,7 @@ class Daemon:
                 try:
                         while 1:
                                 os.kill(pid, SIGTERM)
+                                syslog.syslog(self.stop_msg)
                                 time.sleep(0.1)
                 except OSError, err:
                         err = str(err)
