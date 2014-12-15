@@ -9,10 +9,7 @@
 
 import pyinotify
 import subprocess
-import sys
 import syslog
-
-from daemon import Daemon
 
 
 # Import the flags that we will use to monitor events in the specified folder
@@ -29,9 +26,6 @@ MONITOR_FOLDERS = ['/home/abid/Documents/workspace/.misc',
 # We specify the shell script that has to be run when the specified flags are triggered in the specified folders
 TRIGGERED_SCRIPT = "/home/abid/bin/sanitize_recent_docs"
 
-# Specify the pid file used to monitor and control the daemon/service.
-PID_FILE = "/tmp/watcher.pid"
-
 
 class MyEventHandler(pyinotify.ProcessEvent):
 
@@ -45,64 +39,26 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     def on_close(self, flag, pathname):
 
-        syslog.syslog("{} - {}".format(flag, pathname))
-
         subprocess.call([TRIGGERED_SCRIPT])
 
 
-class WatcherDaemon(Daemon):
-    """
-    Extends the Daemon class by overriding its run() method which provides the primary functionality provided by the
-    service.
-
-    NOTE the loop used in the end.
-    """
-
-    def run(self):
-        # watch manager
-        wm = pyinotify.WatchManager()
-
-        for folder in MONITOR_FOLDERS:
-
-            wm.add_watch(folder, MONITOR_FLAGS, rec=True)
-
-        # event handler
-        eh = MyEventHandler()
-
-        # notifier
-        notifier = pyinotify.Notifier(wm, eh)
-        notifier.loop()
-
-
 def main():
-    """
-    This method sets up the daemon and passes the command to it.
 
-    Source: http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
-    """
+    syslog.syslog("Watcher Started")
 
-    daemon = WatcherDaemon(PID_FILE, start_msg="Watcher started", stop_msg="Watcher stopped")        # The pid file must be specified so that a running daemon can be accessed
+    # watch manager
+    wm = pyinotify.WatchManager()
 
-    if len(sys.argv) == 2:
+    for folder in MONITOR_FOLDERS:
 
-        if 'start' == sys.argv[1]:
-                daemon.start()
+        wm.add_watch(folder, MONITOR_FLAGS, rec=True)
 
-        elif 'stop' == sys.argv[1]:
-                daemon.stop()
+    # event handler
+    eh = MyEventHandler()
 
-        elif 'restart' == sys.argv[1]:
-                daemon.restart()
-
-        else:
-                print "Unknown command"
-                sys.exit(2)
-
-        sys.exit(0)         # We have communicated with the daemon which runs asynchronously so we can exit this script
-
-    else:
-        print "Usage: %s start|stop|restart" % sys.argv[0]
-        sys.exit(2)
+    # notifier
+    notifier = pyinotify.Notifier(wm, eh)
+    notifier.loop()
 
 
 if __name__ == '__main__':
