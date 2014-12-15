@@ -8,7 +8,9 @@
 # This script uses the pyinotify library which in turn uses the Linux kernel's inotify facility to detect filesystem changes and take appropriate actions.
 
 import pyinotify
+import signal
 import subprocess
+import sys
 import syslog
 
 
@@ -42,9 +44,16 @@ class MyEventHandler(pyinotify.ProcessEvent):
         subprocess.call([TRIGGERED_SCRIPT])
 
 
+def signal_term_handler(signal, frame):
+
+    syslog.syslog("Watcher Terminated")
+    sys.exit(0)
+
+
 def main():
 
     syslog.syslog("Watcher Started")
+    signal.signal(signal.SIGTERM, signal_term_handler)      # Attach handler for SIGTERM so we can log the shutdown
 
     # watch manager
     wm = pyinotify.WatchManager()
