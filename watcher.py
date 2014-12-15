@@ -9,6 +9,18 @@
 
 import pyinotify
 
+# Import the flags that we will use to monitor events in the specified folder
+IN_CLOSE_WRITE = pyinotify.EventsCodes.FLAG_COLLECTIONS['OP_FLAGS']['IN_CLOSE_WRITE']
+IN_CLOSE_NOWRITE = pyinotify.EventsCodes.FLAG_COLLECTIONS['OP_FLAGS']['IN_CLOSE_NOWRITE']
+
+# Perform a bitwise OR operation to construct a combined set of flags
+MONITOR_FLAGS = IN_CLOSE_WRITE | IN_CLOSE_NOWRITE
+
+# We specify the folders that need to be monitored
+MONITOR_FOLDERS = ['/home/abid/Documents/workspace/.misc',
+                   '/home/abid/Pictures/.Personal']
+
+
 class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_ACCESS(self, event):
         print "ACCESS event:", event.pathname
@@ -37,8 +49,10 @@ class MyEventHandler(pyinotify.ProcessEvent):
 def main():
     # watch manager
     wm = pyinotify.WatchManager()
-    wm.add_watch('/home/abid/Documents/workspace/.misc', pyinotify.ALL_EVENTS, rec=True)
-    # wm.add_watch('/home/abid/Documents/workspace/.misc', 0x00000010, rec=True)
+
+    for folder in MONITOR_FOLDERS:
+
+        wm.add_watch(folder, MONITOR_FLAGS, rec=True)
 
     # event handler
     eh = MyEventHandler()
