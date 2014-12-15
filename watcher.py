@@ -8,6 +8,8 @@
 # This script uses the pyinotify library which in turn uses the Linux kernel's inotify facility to detect filesystem changes and take appropriate actions.
 
 import pyinotify
+import subprocess
+import syslog
 
 # Import the flags that we will use to monitor events in the specified folder
 IN_CLOSE_WRITE = pyinotify.EventsCodes.FLAG_COLLECTIONS['OP_FLAGS']['IN_CLOSE_WRITE']
@@ -19,6 +21,9 @@ MONITOR_FLAGS = IN_CLOSE_WRITE | IN_CLOSE_NOWRITE
 # We specify the folders that need to be monitored
 MONITOR_FOLDERS = ['/home/abid/Documents/workspace/.misc',
                    '/home/abid/Pictures/.Personal']
+
+# We specify the shell script that has to be run when the specified flags are triggered in the specified folders
+TRIGGERED_SCRIPT = "/home/abid/bin/sanitize_recent_docs"
 
 
 class MyEventHandler(pyinotify.ProcessEvent):
@@ -34,6 +39,9 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def on_close(self, flag, pathname):
 
         print "{}  - {}".format(flag, pathname)
+        syslog.syslog("{} - {}".format(flag, pathname))
+
+        subprocess.call([TRIGGERED_SCRIPT])
 
 
 def main():
