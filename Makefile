@@ -3,20 +3,17 @@
 #
 # This Makefile contains the commands for installing, starting and stopping the watcher service.
 
-DIR="/home/abid/scripts/python/watcher"
-
 .PHONY: install, start, stop
 
 install:
-#			Installation involves creating a symbolic link for the upstart (initd) configuration file.
+#			Installation involves copying the the upstart configuration file to the location for user session upstart jobs.
 #			Then we reload the initd configuration
 #
-	sudo ln -s $(DIR)/watcher.conf /etc/init/watcher.conf
-	sudo initctl reload-configuration
+	cp watcher.conf ~/.config/upstart/watcher.conf
 
 start:
-#			upstart command for launching the watcher service defined by /etc/init/watcher.conf
-	sudo start watcher
+#			upstart command for launching the watcher service defined by ~/.config/upstart/watcher.conf
+	start watcher
 
 stop:
-	sudo stop watcher
+	stop watcher
