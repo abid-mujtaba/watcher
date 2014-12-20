@@ -6,6 +6,8 @@
 # Source: http://www.saltycrane.com/blog/2010/04/monitoring-filesystem-python-and-pyinotify/
 
 # This script uses the pyinotify library which in turn uses the Linux kernel's inotify facility to detect filesystem changes and take appropriate actions.
+#
+# NOTE: Anything output to stdout from this script or any scripts it in turn calls will be logged to ~/.cache/upstart/watcher.log since this will be run as an upstart job in the user session
 
 import pyinotify
 import signal
