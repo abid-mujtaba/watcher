@@ -25,7 +25,8 @@ MONITOR_FLAGS = IN_CLOSE_WRITE | IN_CLOSE_NOWRITE
 
 # We specify the folders that need to be monitored
 MONITOR_FOLDERS = ['/home/abid/Documents/workspace/.misc',
-                   '/home/abid/Pictures/.Personal']
+                   '/home/abid/Pictures/.Personal',
+                   '/home/abid/Downloads']
 
 # We specify the shell script that has to be run when the specified flags are triggered in the specified folders
 TRIGGERED_SCRIPT = "/home/abid/bin/sanitize_recent_docs"
