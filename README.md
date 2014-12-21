@@ -6,11 +6,11 @@ The configuration for the utility must reside in a script named *config.py* in t
 
 In *config.py* you need only two variables:
 
-'''python
+```python
 MONITOR_FOLDERS = [<list of full paths of folders (as strings) which are to be watched for the CLOSE event>]
 
 TRIGGERED_SCRIPT = "<full path of script to run when event is detected>"
-'''
+```
 
 If you want to detect events other than CLOSE simply modify the MONITOR_FLAGS variable in *watcher.py*.
 
@@ -21,17 +21,17 @@ A Makefile has been provided to allow you to install, start and stop the service
 
 To install the service :
 
-'''bash
+```bash
 make install
-'''
+```
 
 Once installed one can use standard *upstart* commands to control the service such as:
 
-'''bash
+```bash
 start watcher
 stop watcher
 restart watcher
-'''
+```
 
 
 ## Logs
