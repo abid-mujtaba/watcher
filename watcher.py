@@ -15,6 +15,8 @@ import subprocess
 import sys
 import syslog
 
+from config import MONITOR_FOLDERS, TRIGGERED_SCRIPT
+
 
 # Import the flags that we will use to monitor events in the specified folder
 IN_CLOSE_WRITE = pyinotify.EventsCodes.FLAG_COLLECTIONS['OP_FLAGS']['IN_CLOSE_WRITE']
@@ -22,14 +24,6 @@ IN_CLOSE_NOWRITE = pyinotify.EventsCodes.FLAG_COLLECTIONS['OP_FLAGS']['IN_CLOSE_
 
 # Perform a bitwise OR operation to construct a combined set of flags
 MONITOR_FLAGS = IN_CLOSE_WRITE | IN_CLOSE_NOWRITE
-
-# We specify the folders that need to be monitored
-MONITOR_FOLDERS = ['/home/abid/Documents/workspace/.misc',
-                   '/home/abid/Pictures/.Personal',
-                   '/home/abid/Downloads']
-
-# We specify the shell script that has to be run when the specified flags are triggered in the specified folders
-TRIGGERED_SCRIPT = "/home/abid/bin/sanitize_recent_docs"
 
 
 class MyEventHandler(pyinotify.ProcessEvent):
