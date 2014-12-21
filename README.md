@@ -36,4 +36,4 @@ restart watcher
 
 ## Logs
 
-When the service is started a log is added to syslog. All other output from both the watcher script and the triggered script appears in the *upstart* logging location which is usuall *$HOME/.cache/upstart/watcher.log.
+When the service is started a log is added to syslog. All other output from both the watcher script and the triggered script appears in the *upstart* logging location which is usuall *$HOME/.cache/upstart/watcher.log*
