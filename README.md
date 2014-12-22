@@ -37,3 +37,7 @@ restart watcher
 ## Logs
 
 When the service is started a log is added to syslog. All other output from both the watcher script and the triggered script appears in the *upstart* logging location which is usuall *$HOME/.cache/upstart/watcher.log*
+
+## Debug
+
+To debug the utility simply run the *watcher.py* script from the terminal (like a normal python script). All output and error messages will be shown on the terminal. To exit the script simply press *Ctrl+C*.
